@@ -1,0 +1,97 @@
+{
+  "manifest_version": 3,
+  "name": "SmsQueryTool",
+  "version": "1.0.2",
+  "description": "SmsQueryTool",
+  "permissions": ["storage", "declarativeNetRequest"],
+  "host_permissions": [
+    "http://newadmin.jpos.jd.com/*",
+    "http://kfuad.jd.com/*",
+    "https://kfuad.jd.com/*",
+    "https://crm.jd.com/*",
+    "http://crm.jd.com/*",
+    "https://sms.jd.com/*",
+    "http://sms.jd.com/*",
+    "https://man-sff.jd.com/*",
+    "https://storage.360buyimg.com/*",
+    "https://api.sms.playgroud.com/*"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [{ "id": "ruleset_1", "enabled": true, "path": "rules.json" }]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://kfuad.jd.com/*",
+        "https://kfuad.jd.com/*",
+        "https://crm.jd.com/*",
+        "http://crm.jd.com/*",
+        "https://sms.jd.com/*",
+        "http://sms.jd.com/*"
+      ],
+      "js": ["page-hook.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "http://kfuad.jd.com/*",
+        "https://kfuad.jd.com/*",
+        "https://crm.jd.com/*",
+        "http://crm.jd.com/*",
+        "https://sms.jd.com/*",
+        "http://sms.jd.com/*"
+      ],
+      "js": ["src/token/persist.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://sms.jd.com/*",
+        "http://sms.jd.com/*",
+        "https://crm.jd.com/monitor/monitorCaseInfo/monitorDetail*"
+      ],
+      "js": [
+        "src/core/namespace.js",
+        "src/core/constants.js",
+        "src/core/state.js",
+        "src/core/text.js",
+        "src/core/async.js",
+        "src/core/runtime.js",
+        "src/core/http.js",
+        "src/domain/columns.js",
+        "src/domain/creator-rules.js",
+        "src/domain/tracker.js",
+        "src/domain/matcher.js",
+        "src/domain/crm-range.js",
+        "src/services/user.js",
+        "src/services/sms.js",
+        "src/services/phone.js",
+        "src/services/crm-discover.js",
+        "src/services/crm-parse.js",
+        "src/services/crm-fetch.js",
+        "src/services/crm-resolve.js",
+        "src/services/crm-export-button.js",
+        "src/services/integrity.js",
+        "src/services/license.js",
+        "src/services/runtime-config.js",
+        "src/services/version-check.js",
+        "src/ui/template.js",
+        "src/ui/blocked.js",
+        "src/ui/view.js",
+        "src/ui/filter.js",
+        "src/ui/panel.js",
+        "src/ui/notifications.js",
+        "src/controllers/window.js",
+        "src/controllers/crm.js",
+        "src/controllers/batch.js",
+        "src/controllers/events.js",
+        "src/csv.js",
+        "src/app.js",
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": { "service_worker": "background.js" }
+}
