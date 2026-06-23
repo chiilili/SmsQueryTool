@@ -133,6 +133,7 @@
       if (A.els.deleteCrmBtn) A.els.deleteCrmBtn.disabled = A.state.running || !(A.els.savedCrmSelect && A.els.savedCrmSelect.value);
       if (A.els.accountCol) A.els.accountCol.disabled = A.state.running;
       if (A.els.eventCol) A.els.eventCol.disabled = A.state.running;
+      if (A.els.speedRange) A.els.speedRange.disabled = A.state.running;
     },
     // 统一显隐「自定义」渠道的三行（已存来源 / 来源URL / 命名保存）。
     setCustomRowsVisible(show) {

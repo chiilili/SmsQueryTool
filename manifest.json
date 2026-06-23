@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SmsQueryTool",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "SmsQueryTool",
   "permissions": ["storage", "declarativeNetRequest"],
   "host_permissions": [
@@ -13,8 +13,7 @@
     "https://sms.jd.com/*",
     "http://sms.jd.com/*",
     "https://man-sff.jd.com/*",
-    "https://storage.360buyimg.com/*",
-    "https://api.sms.playgroud.com/*"
+    "https://storage.360buyimg.com/*"
   ],
   "declarative_net_request": {
     "rule_resources": [{ "id": "ruleset_1", "enabled": true, "path": "rules.json" }]
@@ -74,14 +73,11 @@
         "src/services/crm-export-button.js",
         "src/services/integrity.js",
         "src/services/license.js",
-        "src/services/runtime-config.js",
-        "src/services/version-check.js",
         "src/ui/template.js",
         "src/ui/blocked.js",
         "src/ui/view.js",
         "src/ui/filter.js",
         "src/ui/panel.js",
-        "src/ui/notifications.js",
         "src/controllers/window.js",
         "src/controllers/crm.js",
         "src/controllers/batch.js",

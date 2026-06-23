@@ -61,8 +61,7 @@
       if (!AUTH_ERR_RE.test(msg)) throw err;
       const warm = await warmTokenOnce();
       if (!warm || !warm.ok) {
-        const extra = warm && warm.error ? '（' + warm.error + '）' : '';
-        const e = new Error('鉴权已失效，自动刷新失败' + extra + '。请打开 kfuad 页面登录后再试');
+        const e = new Error('首次使用请打开 http://kfuad.jd.com/#/produce 网页刷新一下，点击任意事件号之后，重新刷新本页');
         throw e;
       }
       // 等 storage 变更经 chrome.storage.onChanged 推回 page-hook 后再发起

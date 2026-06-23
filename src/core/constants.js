@@ -1,20 +1,18 @@
 'use strict';
 (function (A) {
-  // 注意：这里只保留"骨架默认值"。
-  // 真正的业务知识（列名候选、SMS 关键字、CRM 探测端点）由服务端通过签名接口
-  // /api/runtime-config 下发，并在 A.RuntimeConfig.load() 时合入本对象。
-  // 这样攻击者反编译扩展也拿不到核心特征。
+  // 脱机版：业务知识全部内置在本地，不再依赖服务端 /api/runtime-config 下发。
+  // 单机即可运行，无需联网到授权服务器。
   A.constants = {
-    // —— 由服务端覆盖（这里给空/最小兜底）——
-    IGNORED_CREATORS: new Set(),
-    CREATOR_COL_CANDIDATES: [],
-    TRACKER_COL_CANDIDATES: [],
-    EVENT_COL_CANDIDATES: [],
-    ACCOUNT_COL_CANDIDATES: [],
-    CRM_FUN_NAME: '',
+    // —— 内置业务知识（原由服务端下发，现改为本地常量）——
+    IGNORED_CREATORS: new Set(['org.jimi', 'robotlara']),
+    CREATOR_COL_CANDIDATES: ['创建人', '创建人账号', '创建人erp', '创建人ERP', '创建者', '建单人', '登记人', '提交人'],
+    TRACKER_COL_CANDIDATES: ['追踪人', '跟踪人', '跟进人', '追踪客服', '跟踪客服', '处理人', '责任人'],
+    EVENT_COL_CANDIDATES: ['事件号', '事件编号', '事件ID', 'caseId', 'CASEID', 'case id', '工单号', '服务单号', '投诉单号', '问题单号', '单号'],
+    ACCOUNT_COL_CANDIDATES: ['客户账户', '客户账号', '客户帐号', '客户帐户', '用户账号', '用户帐号', '用户账户', '客户名称', '账号名', '账户名', '账号', '用户pin', '用户PIN', '客户pin', '客户PIN', 'PIN', 'pin', '会员账号', '买家账号'],
+    CRM_FUN_NAME: 'caseHandleCount',
     CRM_TREE_ENDPOINT_GUESSES: [],
-    SMS_TARGET_SENDER_ID: 0,
-    SMS_CONTENT_KEYWORDS: [],
+    SMS_TARGET_SENDER_ID: 115,
+    SMS_CONTENT_KEYWORDS: ['尊敬的', '呦'],
     SMS_QUERY_WINDOW_DAYS: 5,
     SMS_QUERY_PAGE_SIZE: 50,
     SMS_QUERY_MAX_PAGES: 10,

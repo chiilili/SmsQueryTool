@@ -29,15 +29,12 @@
         crmNameRow: $('crmNameRow'), crmNameInput: $('crmNameInput'), saveCrmBtn: $('saveCrmBtn'),
         accountCol: $('accountCol'), eventCol: $('eventCol'), detectStatus: $('detectStatus'),
         startBtn: $('startBtn'), stopBtn: $('stopBtn'), exportBtn: $('exportBtn'), clearBtn: $('clearBtn'),
-        speedSeg: $('speedSeg'),
+        speedRange: $('speedRange'), speedReadout: $('speedReadout'),
         log: $('log'), resultBody: $('resultBody'), bar: $('bar'),
         sTotal: $('sTotal'), sDone: $('sDone'), sHit: $('sHit'), sNoHit: $('sNoHit'), sError: $('sError'), sSkipped: $('sSkipped'),
         filterPopover: $('filterPopover'), filterPopoverTitle: $('filterPopoverTitle'),
         filterPopoverSearch: $('filterPopoverSearch'), filterPopoverList: $('filterPopoverList'),
         filterPopoverApply: $('filterPopoverApply'), filterPopoverCancel: $('filterPopoverCancel'), filterPopoverClear: $('filterPopoverClear'),
-        notifBtn: $('notifBtn'), notifBadge: $('notifBadge'), notifPopover: $('notifPopover'),
-        notifList: $('notifList'), notifMarkRead: $('notifMarkRead'),
-        checkUpdateBtn: $('checkUpdateBtn'), runtimeBanner: $('runtimeBanner')
       };
     },
     shouldUseStandalone() {

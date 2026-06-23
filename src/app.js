@@ -68,19 +68,8 @@
       }
       applyCommand(policy);
 
-      // 拉取并合入服务端下发的业务知识（列名候选 / CRM 探测端点 / SMS 关键字 等）。
-      // 失败时降级到本地缓存或骨架默认值——但 CRM 探测会因为没有 endpoint 列表而失效，
-      // 这是把核心逻辑搬到服务端的代价，也是安全收益。
-      try {
-        if (A.RuntimeConfig && typeof A.RuntimeConfig.load === 'function') {
-          const r = await A.RuntimeConfig.load();
-          if (r && r.source === 'defaults') {
-            console.warn('[SmsQueryTool] 未能从服务端获取业务配置，将使用本地兜底默认值。');
-          }
-        }
-      } catch (e) {
-        console.warn('[SmsQueryTool] 拉取业务配置异常：', e && e.message ? e.message : e);
-      }
+      // 脱机版：业务知识（列名候选 / CRM 参数 / SMS 关键字 等）已内置在 constants.js，
+      // 无需再从服务端拉取，这里不做任何运行时配置加载。
 
       // 收到任意 policy 更新（订阅推送 or 心跳）后的统一处理：命令 / 阻断 / 横幅。
       const handlePolicyUpdate = (next) => {
@@ -98,12 +87,6 @@
         } else if (next && next.enabled === false) {
           A.Blocked.showDisabled({ erp, reason: next.message, version: ctx.version });
         }
-        // 把 policy 里的最新横幅刷新到面板顶部
-        try {
-          if (A.VersionCheck && typeof A.VersionCheck.renderBannerIfAny === 'function') {
-            A.VersionCheck.renderBannerIfAny().catch(() => {});
-          }
-        } catch (_) {}
       };
       // 主实时通道：长轮询订阅（管理员改状态/命令/横幅 → 亚秒级生效，替代原 5 分钟轮询）
       if (typeof A.License.startRealtimeSubscribe === 'function') {
@@ -113,23 +96,6 @@
       A.License.startHeartbeat(handlePolicyUpdate);
 
       A.Panel.boot();
-
-      if (A.Notifications && typeof A.Notifications.init === 'function') {
-        A.Notifications.init(erp).catch(() => {});
-      }
-
-      // 「检查更新」标记 + 「What's New」自动弹窗 + 远程横幅渲染
-      try {
-        if (A.VersionCheck) {
-          // 顶栏更新按钮高亮（有可用新版本时变橙）
-          if (policy && policy.update_available && A.els && A.els.checkUpdateBtn) {
-            A.els.checkUpdateBtn.classList.add('has-update');
-            A.els.checkUpdateBtn.title = '发现新版本 v' + (policy.latest_version || '');
-          }
-          A.VersionCheck.showWhatsNewIfUpgraded().catch(() => {});
-          A.VersionCheck.renderBannerIfAny().catch(() => {});
-        }
-      } catch (e) { console.warn('[SmsQueryTool] 版本/横幅初始化失败：', e); }
     }
   };
   A.App = App;

@@ -7,15 +7,13 @@ const ALLOWED_FETCH_ORIGINS = new Set([
   'https://kfuad.jd.com',
   'http://sms.jd.com',
   'https://sms.jd.com',
-  'https://storage.360buyimg.com',
-  'https://api.sms.playgroud.com'
+  'https://storage.360buyimg.com'
 ]);
 function normalizeCredentialsMode(value, fallback) {
   return ['include', 'omit', 'same-origin'].includes(value) ? value : fallback;
 }
 function inferCredentialsMode(url) {
   if (url.hostname === 'storage.360buyimg.com') return 'omit';
-  if (url.hostname === 'api.sms.playgroud.com') return 'omit';
   return 'include';
 }
 function normalizeHeaders(input) {

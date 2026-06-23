@@ -22,6 +22,9 @@
       const msg = String(err && err.message ? err.message : err || '');
       if (A.Runtime && A.Runtime.isInvalidatedText(msg)) return false;
       if (/HTTP\s*5\d{2}/.test(msg)) return true;
+      // MV3 后台 service worker 被中途回收时 chrome 抛的瞬时错误：
+      // 重试会重新唤醒后台并成功，因此视为可重试。
+      if (/message channel closed|before a response was received|asynchronous response by returning true/i.test(msg)) return true;
       return /abort|timed?\s*out|timeout|network|failed to fetch|ERR_|ECONNRESET|socket hang up|ETIMEDOUT|EAI_AGAIN/i.test(msg);
     },
     async withRetry(fn, opts) {

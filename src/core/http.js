@@ -4,7 +4,6 @@
     credentialsFor(url) {
       const t = url instanceof URL ? url : new URL(url, location.href);
       if (t.hostname === 'storage.360buyimg.com') return 'omit';
-      if (t.hostname === 'api.sms.playgroud.com') return 'omit';
       return 'include';
     },
     normalizeCredentials(v, fb) { return ['include', 'omit', 'same-origin'].includes(v) ? v : (fb || 'include'); },

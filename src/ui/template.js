@@ -79,14 +79,11 @@
     .form-table th { width: 86px; white-space: nowrap; }
     .form-table td { min-width: 120px; }
     .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .speed-seg { display: inline-flex; align-items: center; gap: 2px; margin-left: auto; padding: 2px; background: #f0f0f3; border: 1px solid rgba(0,0,0,.10); border-radius: 999px; }
-    .speed-seg .speed-cap { font-size: 11px; color: #8e8e93; padding: 0 5px 0 9px; white-space: nowrap; user-select: none; }
-    .speed-seg .speed-opt { min-height: 0; padding: 4px 11px; border: 0; border-radius: 999px; background: transparent; color: #6e6e73; font-size: 12px; font-weight: 600; line-height: 1.3; }
-    .speed-seg .speed-opt:hover:not(.active):not(:disabled) { background: #e4e4e9; }
-    .speed-seg .speed-opt.active { background: #fff; color: #1d1d1f; box-shadow: 0 1px 3px rgba(0,0,0,.14); }
-    .speed-seg .speed-opt[data-speed="gentle"].active { color: #137333; }
-    .speed-seg .speed-opt[data-speed="turbo"].active { color: #b3261e; }
-    .speed-seg .speed-opt:disabled { opacity: .5; }
+    .speed-ctl { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; padding: 4px 12px; background: #f0f0f3; border: 1px solid rgba(0,0,0,.10); border-radius: 999px; }
+    .speed-ctl .speed-cap { font-size: 11px; color: #8e8e93; white-space: nowrap; user-select: none; }
+    .speed-ctl input[type="range"] { width: 132px; accent-color: #0a84ff; cursor: pointer; vertical-align: middle; }
+    .speed-ctl input[type="range"]:disabled { opacity: .5; cursor: default; }
+    .speed-ctl .speed-readout { font-size: 12px; font-weight: 600; color: #1d1d1f; white-space: nowrap; min-width: 124px; text-align: right; font-variant-numeric: tabular-nums; }
     .detect-status { color: #3a3a3c; font-size: 12px; overflow-wrap: anywhere; }
     .statusline { margin: 10px 0 7px; padding: 9px 12px; border: 1px solid rgba(0,0,0,.08); border-radius: 14px; background: rgba(245,245,247,.82); color: #3a3a3c; font-size: 12px; }
     .table-head { font-weight: 700; margin: 6px 0; color: #1d1d1f; }
@@ -133,40 +130,10 @@
     .filter-empty { padding: 8px; color: #6e6e73; text-align: center; }
     .filter-actions { display: flex; gap: 6px; justify-content: flex-end; }
     .filter-actions button { height: 26px; min-height: 0; padding: 0 10px; font-size: 12px; }
-    .notif-bell, .check-update-btn { position: relative; width: 30px; height: 30px; min-height: 0; padding: 0; border-radius: 50%; background: rgba(255,255,255,.72); display: inline-flex; align-items: center; justify-content: center; color: #1d1d1f; }
-    .notif-bell:hover:not(:disabled), .check-update-btn:hover:not(:disabled) { background: #e9e9ed; }
-    .notif-bell svg, .check-update-btn svg { width: 16px; height: 16px; pointer-events: none; }
-    .check-update-btn.has-update { background: #fff0d6; color: #a15c00; box-shadow: 0 0 0 2px #ffd9a3; }
-    .runtime-banner { display: flex; align-items: center; gap: 10px; margin: 8px 0 4px; padding: 9px 14px; border-radius: 14px; font-size: 12.5px; line-height: 1.55; color: #1d1d1f; background: #eef4ff; border: 1px solid #c8defe; }
-    .runtime-banner[data-level="warning"] { background: #fff6e6; border-color: #ffd9a3; color: #6b4500; }
-    .runtime-banner[data-level="critical"] { background: #ffe9ea; border-color: #ffb6ba; color: #92161c; }
-    .runtime-banner p, .runtime-banner h3, .runtime-banner h4 { margin: 2px 0; }
-    .runtime-banner a { color: inherit; text-decoration: underline; }
-    .runtime-banner code, .runtime-banner pre { background: rgba(0,0,0,.06); border-radius: 6px; padding: 1px 6px; font-family: 'SFMono-Regular','Consolas',monospace; font-size: 12px; }
-    .notif-bell .notif-badge { position: absolute; top: -2px; right: -2px; min-width: 16px; height: 16px; padding: 0 4px; background: #ff3b30; color: #fff; border-radius: 999px; font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; box-shadow: 0 0 0 2px #fff; }
-    .notif-popover { position: fixed; z-index: 2147483647; width: 360px; max-height: 460px; background: #fff; border: 1px solid rgba(0,0,0,.12); border-radius: 14px; box-shadow: 0 16px 48px rgba(0,0,0,.22); display: flex; flex-direction: column; font-size: 12px; overflow: hidden; }
-    .notif-popover-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #eee; background: #fafafa; }
-    .notif-popover-head .title { font-size: 13px; font-weight: 700; color: #1d1d1f; }
-    .notif-popover-head .mark-read { background: transparent; border: 0; color: #0a84ff; font-size: 12px; padding: 0; min-height: 0; }
-    .notif-popover-head .mark-read:hover:not(:disabled) { text-decoration: underline; background: transparent; }
-    .notif-list { flex: 1 1 auto; overflow-y: auto; }
-    .notif-empty { padding: 24px 14px; color: #8e8e93; text-align: center; }
-    .notif-item { padding: 10px 14px; border-bottom: 1px solid #f2f2f4; position: relative; }
-    .notif-item:last-child { border-bottom: 0; }
-    .notif-item.unread { background: #f0f7ff; }
-    .notif-item .head { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-    .notif-item .lvl { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 10px; font-weight: 700; }
-    .notif-item .lvl-info { background: #e3f2fd; color: #0a66c2; }
-    .notif-item .lvl-warning { background: #fff4e5; color: #b86e00; }
-    .notif-item .lvl-critical { background: #fdecea; color: #d93025; }
-    .notif-item .ti { flex: 1; font-weight: 600; color: #1d1d1f; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .notif-item .ts { color: #8e8e93; font-size: 11px; }
-    .notif-item .ct { color: #3a3a3c; white-space: pre-wrap; word-break: break-word; line-height: 1.5; }
-    .notif-toast-mask { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 2147483647; display: flex; align-items: center; justify-content: center; }
-    .notif-toast { background: #fff; border-radius: 14px; max-width: 480px; width: calc(100vw - 60px); padding: 18px 22px; box-shadow: 0 24px 60px rgba(0,0,0,.28); }
-    .notif-toast h3 { margin: 0 0 8px; font-size: 16px; color: #d93025; }
-    .notif-toast .ct { white-space: pre-wrap; word-break: break-word; color: #1d1d1f; line-height: 1.55; max-height: 50vh; overflow: auto; }
-    .notif-toast .row { display: flex; justify-content: flex-end; margin-top: 14px; }
+    .app-footer { text-align: center; padding: 14px 16px 18px; color: #86909c; font-size: 12px; }
+    .app-footer a { color: #8d161b; text-decoration: none; }
+    .app-footer a:hover { text-decoration: underline; }
+    .app-footer .sep { margin: 0 8px; color: #c9cdd4; }
     .hidden, .collapsed { display: none !important; }
     @media (max-width: 980px) {
       .panel { width: calc(100vw - 20px); }
@@ -193,17 +160,9 @@
       </div>
       <div class="head-actions">
         <span class="source-summary" id="sourceSummary">未选择</span>
-        <button type="button" class="check-update-btn" id="checkUpdateBtn" title="检查更新" aria-label="检查更新">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-        </button>
-        <button type="button" class="notif-bell" id="notifBtn" title="通知中心" aria-label="通知中心">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span class="notif-badge hidden" id="notifBadge">0</span>
-        </button>
         <button class="toggle" id="toggleBtn" title="收起/展开">−</button>
       </div>
     </div>
-    <div class="runtime-banner" id="runtimeBanner" style="display:none;"></div>
     <div class="body" id="body">
       <div class="stats">
         <div class="stat stat-total"><b id="sTotal">0</b><span>总数</span></div>
@@ -272,11 +231,11 @@
                 <button id="stopBtn" disabled>停止</button>
                 <button id="exportBtn" disabled>导出CSV</button>
                 <button id="clearBtn">重置</button>
-                <div class="speed-seg" id="speedSeg" role="group" aria-label="查询速度档位">
-                  <span class="speed-cap">速度</span>
-                  <button type="button" class="speed-opt" data-speed="gentle" title="温和：约 1 条/秒，最稳妥，几乎不触发风控">🐢 温和</button>
-                  <button type="button" class="speed-opt active" data-speed="standard" title="标准（推荐）：约 3 条/秒，明显更快且温和">⚡ 标准</button>
-                  <button type="button" class="speed-opt" data-speed="turbo" title="极速：最多 8 路并发，最快；对同账号高频请求，风控风险更高">🚀 极速</button>
+                <div class="speed-ctl" id="speedCtl" title="查询速度：间隔越小越快；对同账号高频请求，风控风险越高">
+                  <span class="speed-cap">🚀 快</span>
+                  <input type="range" id="speedRange" min="50" max="2000" step="10" value="330" aria-label="查询速度（请求间隔毫秒）">
+                  <span class="speed-cap">🐢 慢</span>
+                  <span class="speed-readout" id="speedReadout"></span>
                 </div>
               </div>
             </td>
@@ -312,16 +271,16 @@
           </table>
         </div>
       </section>
+      <footer class="app-footer">
+        <a href="https://github.com/chiilili" target="_blank" rel="noopener noreferrer">2026 © 董昊. All rights reserved.</a>
+        <span class="sep">|</span>
+        <a href="http://status.woaiwusaqi.cn/" target="_blank" rel="noopener noreferrer">服务状态</a>
+        <span class="sep">|</span>
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">苏ICP备2025224440号</a>
+      </footer>
     </div>
   </div>
   <button type="button" class="restore-pill hidden" id="restoreBtn">显示SmsQueryTool</button>
-  <div class="notif-popover hidden" id="notifPopover" role="dialog" aria-label="通知中心">
-    <div class="notif-popover-head">
-      <span class="title">通知中心</span>
-      <button type="button" class="mark-read" id="notifMarkRead">全部已读</button>
-    </div>
-    <div class="notif-list" id="notifList"></div>
-  </div>
   <div class="filter-popover hidden" id="filterPopover" role="dialog" aria-label="筛选">
     <div class="filter-popover-title" id="filterPopoverTitle">筛选</div>
     <input type="text" id="filterPopoverSearch" placeholder="搜索…" />

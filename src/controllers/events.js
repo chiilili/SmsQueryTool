@@ -51,45 +51,50 @@
         });
       }
     },
-    // 速率档位：🐢温和 / ⚡标准 / 🚀极速。选择即时生效并持久化到 chrome.storage.local，
-    // 下次打开自动恢复。批量进行中禁用切换，避免中途改速率造成统计困惑。
+    // 查询速度：手动滑块调节请求间隔（毫秒），间隔越小越快。
+    // 拖动即时生效并持久化到 chrome.storage.local，下次打开自动恢复。
+    // 批量进行中由 View.updateButtons 禁用滑块，避免中途改速率造成统计困惑。
     bindSpeed() {
-      const seg = A.els.speedSeg;
-      if (!seg || !A.License || typeof A.License.setSpeedPreset !== 'function') return;
-      const STORE_KEY = 'jd_sms_speed_preset';
-      const opts = Array.from(seg.querySelectorAll('.speed-opt'));
-      const reflect = (name) => {
-        opts.forEach(b => b.classList.toggle('active', b.dataset.speed === name));
+      const range = A.els.speedRange, readout = A.els.speedReadout;
+      if (!range || !A.License || typeof A.License.setSpeedIntervalMs !== 'function') return;
+      const STORE_KEY = 'jd_sms_speed_interval_ms';
+      // 让滑块的 min/max 与 License 的合法范围保持一致
+      try {
+        const rg = A.License.speedRange ? A.License.speedRange() : null;
+        if (rg) { range.min = String(rg.min); range.max = String(rg.max); }
+      } catch (_) {}
+      const renderReadout = (ms) => {
+        if (!readout) return;
+        const rate = ms > 0 ? (1000 / ms) : 0;
+        readout.textContent = ms + ' ms · ≈' + rate.toFixed(1) + ' 条/秒';
       };
-      const apply = (name, persist) => {
-        if (!A.License.setSpeedPreset(name)) return;
-        reflect(A.License.currentSpeedPreset());
+      const apply = (ms, persist) => {
+        const eff = A.License.setSpeedIntervalMs(ms);
+        range.value = String(eff);
+        renderReadout(eff);
         if (persist) {
           try {
             if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-              chrome.storage.local.set({ [STORE_KEY]: name });
+              chrome.storage.local.set({ [STORE_KEY]: eff });
             }
           } catch (_) {}
         }
       };
-      // 恢复上次选择
+      // 恢复上次设置
       try {
         if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
           chrome.storage.local.get([STORE_KEY], r => {
-            const saved = r && r[STORE_KEY];
-            if (saved && A.License.speedPresets && A.License.speedPresets()[saved] != null) apply(saved, false);
-            else reflect(A.License.currentSpeedPreset());
+            const saved = r && Number(r[STORE_KEY]);
+            apply(Number.isFinite(saved) && saved ? saved : A.License.currentSpeedIntervalMs(), false);
           });
         } else {
-          reflect(A.License.currentSpeedPreset());
+          apply(A.License.currentSpeedIntervalMs(), false);
         }
-      } catch (_) { reflect(A.License.currentSpeedPreset()); }
-      // 点击切换
-      seg.addEventListener('click', (e) => {
-        const btn = e.target && e.target.closest ? e.target.closest('.speed-opt') : null;
-        if (!btn || !seg.contains(btn)) return;
-        if (A.state && A.state.running) return; // 跑批中不允许切换
-        apply(btn.dataset.speed, true);
+      } catch (_) { apply(A.License.currentSpeedIntervalMs(), false); }
+      // 拖动调节（实时更新读数，松手/每次变化都持久化）
+      range.addEventListener('input', () => {
+        if (A.state && A.state.running) { range.value = String(A.License.currentSpeedIntervalMs()); return; }
+        apply(Number(range.value), true);
       });
     },
     bindActions() {
@@ -125,11 +130,6 @@
       A.els.zoomBtn.addEventListener('click', e => { e.stopPropagation(); A.WindowCtl.toggleMaximized(); });
       A.els.closeBtn.addEventListener('click', e => { e.stopPropagation(); A.WindowCtl.hideToPill(); });
       A.els.restoreBtn.addEventListener('click', () => A.WindowCtl.restoreFromPill());
-      if (A.els.checkUpdateBtn && A.VersionCheck) {
-        A.els.checkUpdateBtn.addEventListener('click', () => {
-          A.VersionCheck.check({ silent: false }).catch(e => console.warn('[SmsQueryTool] 检查更新失败：', e));
-        });
-      }
     },
     reset() {
       // 若有正在跑的批量，先发停止信号并把节流队列一次性释放掉，
