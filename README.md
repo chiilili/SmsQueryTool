@@ -9,7 +9,6 @@
 5. 选择 SmsQueryTool 文件夹，也就是包含 `manifest.json` 的文件夹。
 6. 确认扩展列表中出现 `SmsQueryTool`，并保持启用状态。
 
-如果拿到的是 `.crx` 安装包，可以直接拖到 `chrome://extensions/` 页面完成安装。
 
 ## 使用方法
 
