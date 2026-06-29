@@ -13,14 +13,13 @@
     async queryOnce(mobileNum, startTime, endTime, pageNo, pageSize) {
       const body = JSON.stringify({ mobileNum, startTime, endTime, keyword: '', senderSource: 0, pageNo, pageSize });
       return A.Async.withRetry(async () => {
-        const res = await fetch(C.SMS_QUERY_URL, {
+        const text = await A.Http.requestText(C.SMS_QUERY_URL, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json;charset=UTF-8', 'Accept': 'application/json, text/plain, */*' },
-          body
+          body,
+          errorPrefix: 'SMS接口请求失败'
         });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const text = await res.text();
         let json;
         try { json = JSON.parse(text); } catch (_e) {
           if (/登录|login|passport/i.test(text)) throw new Error('sms.jd.com 登录态失效，请先登录');
@@ -42,11 +41,11 @@
         const records = Array.isArray(payload && payload.records) ? payload.records : [];
         let oldest = Infinity;
         for (const item of records) {
-          if (!A.Matcher.isTargetSms(item)) continue;
           const t = T.clean(item.receiptArrivedTime || item.sendTime);
           const ms = A.Dates.parseLoose(t);
           if (!ms) continue;
           oldest = Math.min(oldest, ms);
+          if (!A.Matcher.isTargetSms(item)) continue;
           if (!A.Matcher.inWindow(ms, window)) continue;
           matches.push(item);
         }
@@ -63,7 +62,10 @@
       if (!A.state.smsQueryCache) A.state.smsQueryCache = new Map();
       const key = SmsService.cacheKey(phone, window);
       if (A.state.smsQueryCache.has(key)) return A.state.smsQueryCache.get(key);
-      const p = SmsService.queryAllPages(phone, window);
+      const p = SmsService.queryAllPages(phone, window).catch(err => {
+        if (A.state.smsQueryCache && A.state.smsQueryCache.get(key) === p) A.state.smsQueryCache.delete(key);
+        throw err;
+      });
       A.state.smsQueryCache.set(key, p);
       return p;
     }

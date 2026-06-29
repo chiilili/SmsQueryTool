@@ -31,7 +31,7 @@
       let url;
       try { url = new URL(s, 'https://crm.jd.com'); }
       catch (_) { return { ok: false, error: '自定义数据来源URL格式不正确。' }; }
-      if (!/^https?:$/.test(url.protocol) || !/crm\.jd\.com$/i.test(url.hostname)) {
+      if (!/^https?:$/.test(url.protocol) || url.hostname.toLowerCase() !== 'crm.jd.com') {
         return { ok: false, error: '自定义数据来源URL必须来自 crm.jd.com。' };
       }
       const parDeptId = A.CrmDiscover.extractParDeptIdFromUrl(url.href);
@@ -94,7 +94,7 @@
       let url;
       try { url = new URL(raw, 'https://crm.jd.com'); }
       catch (_) { throw new Error('自定义数据来源URL格式不正确。'); }
-      if (!/^https?:$/.test(url.protocol) || !/crm\.jd\.com$/i.test(url.hostname)) {
+      if (!/^https?:$/.test(url.protocol) || url.hostname.toLowerCase() !== 'crm.jd.com') {
         throw new Error('自定义数据来源URL必须来自 crm.jd.com。');
       }
       const parDeptId = A.CrmDiscover.extractParDeptIdFromUrl(url.href);

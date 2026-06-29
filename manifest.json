@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SmsQueryTool",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "SmsQueryTool",
   "permissions": ["storage", "declarativeNetRequest"],
   "host_permissions": [
@@ -48,6 +48,7 @@
       "matches": [
         "https://sms.jd.com/*",
         "http://sms.jd.com/*",
+        "http://crm.jd.com/monitor/monitorCaseInfo/monitorDetail*",
         "https://crm.jd.com/monitor/monitorCaseInfo/monitorDetail*"
       ],
       "js": [

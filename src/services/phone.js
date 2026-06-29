@@ -101,7 +101,13 @@
     return m ? normalize(m[1]) : '';
   }
 
-  function normalize(v) { return T.clean(v).replace(/[^\d]/g, ''); }
+  function normalize(v) {
+    const raw = T.clean(v);
+    if (!raw || raw.includes('*')) return '';
+    const digits = raw.replace(/[^\d]/g, '');
+    const mobile = digits.length === 13 && digits.startsWith('86') ? digits.slice(2) : digits;
+    return /^1[3-9]\d{9}$/.test(mobile) ? mobile : '';
+  }
 
   async function ensureHookReady(timeoutMs) {
     const to = Math.max(500, Number(timeoutMs) || 3000);
@@ -134,7 +140,10 @@
     const promise = (async () => {
       const raw = await rawLookupWithRetry(id);
       return { phone: extract(raw), raw };
-    })();
+    })().catch(err => {
+      if (A.state.phoneCache && A.state.phoneCache.get(id) === promise) A.state.phoneCache.delete(id);
+      throw err;
+    });
     A.state.phoneCache.set(id, promise);
     return promise;
   }

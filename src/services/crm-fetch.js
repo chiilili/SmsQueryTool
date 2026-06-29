@@ -41,7 +41,10 @@
       let firstTable = A.CrmParse.findDataTable(firstDoc);
       let firstParsed = firstTable ? A.CrmParse.tableObjects(firstTable) : { headers: [], rows: [] };
       let total = A.CrmParse.totalCountFromDoc(firstDoc);
-      let pageSize = A.CrmParse.pageSizeFromDoc(firstDoc) || configuredPageSize;
+      let detectedPageSize = A.CrmParse.pageSizeFromDoc(firstDoc);
+      let pageSize = (firstParsed.rows.length && total > firstParsed.rows.length && (!detectedPageSize || detectedPageSize > firstParsed.rows.length))
+        ? firstParsed.rows.length
+        : (detectedPageSize || configuredPageSize);
       if (!firstParsed.rows.length || !A.CrmParse.hasRequiredHeader(firstParsed.headers)) {
         pageSize = configuredPageSize;
         onProgress && onProgress(1, 1, total);
@@ -51,7 +54,8 @@
         if (!firstTable) throw new Error('CRM数据接口返回中未找到可识别的数据表格');
         firstParsed = A.CrmParse.tableObjects(firstTable);
         total = A.CrmParse.totalCountFromDoc(firstDoc) || total || firstParsed.rows.length;
-        pageSize = A.CrmParse.pageSizeFromDoc(firstDoc) || pageSize || firstParsed.rows.length || 100;
+        detectedPageSize = A.CrmParse.pageSizeFromDoc(firstDoc);
+        pageSize = detectedPageSize || pageSize || firstParsed.rows.length || 100;
       }
       total = total || firstParsed.rows.length;
       pageSize = Math.max(1, pageSize || configuredPageSize || 100);

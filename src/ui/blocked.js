@@ -78,9 +78,7 @@
         }
       } catch (_) { safeUrl = ''; }
       const notes = String((opts && opts.releaseNotes) || '').trim();
-      // 注意：release_notes 是富文本（服务端已经经过白名单 sanitizeRichHtml），
-      // 这里**不能**用 escapeHtml，否则用户会看到 <h3> 等字面字符；
-      // 走客户端二次净化（白名单解析 → DocumentFragment）后挂载到 shadow DOM 内。
+      // 富文本只允许走客户端白名单 sanitizer；没有 sanitizer 时降级为纯文本。
       const { host, root } = mount(() => `
         <div class="card">
           <div class="icon">⬆️</div>
@@ -102,8 +100,7 @@
         if (notes && A.VersionCheck && typeof A.VersionCheck.sanitizeRichHtmlToFragment === 'function') {
           notesEl.appendChild(A.VersionCheck.sanitizeRichHtmlToFragment(notes));
         } else if (notes) {
-          // 降级：服务端净化过的内容直接渲染（极少触达）
-          notesEl.innerHTML = notes;
+          notesEl.textContent = notes;
         } else {
           notesEl.textContent = '请下载并安装新版本后继续使用。';
         }

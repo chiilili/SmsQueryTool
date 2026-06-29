@@ -18,16 +18,29 @@
     window.postMessage({ type: 'JD_SMS_TOKEN_CAPTURED', token }, '*');
   }
 
-  window.fetch = function (resource, init) {
-    if (init && init.headers) {
-      let v = null;
-      if (init.headers instanceof Headers) v = init.headers.get('x-mlaas-at');
-      else if (typeof init.headers === 'object') {
-        const key = Object.keys(init.headers).find(k => k.toLowerCase() === 'x-mlaas-at');
-        if (key) v = init.headers[key];
+  function headerValue(headers, name) {
+    if (!headers) return null;
+    const target = String(name || '').toLowerCase();
+    if (headers instanceof Headers) return headers.get(target);
+    if (Array.isArray(headers)) {
+      for (const pair of headers) {
+        if (!pair || pair.length < 2) continue;
+        if (String(pair[0] || '').toLowerCase() === target) return pair[1];
       }
-      if (v) updateCapturedToken(v);
+      return null;
     }
+    if (typeof headers === 'object') {
+      const key = Object.keys(headers).find(k => k.toLowerCase() === target);
+      return key ? headers[key] : null;
+    }
+    return null;
+  }
+
+  window.fetch = function (resource, init) {
+    const initToken = init && headerValue(init.headers, 'x-mlaas-at');
+    const requestToken = !initToken && resource instanceof Request ? headerValue(resource.headers, 'x-mlaas-at') : null;
+    const token = initToken || requestToken;
+    if (token) updateCapturedToken(token);
     return originalFetch.apply(this, arguments);
   };
 
@@ -81,8 +94,7 @@
   }
 
   async function executeJDQuery(caseId, token) {
-    const protocol = window.location.protocol === 'http:' ? 'http:' : 'https:';
-    const url = `${protocol}//man-sff.jd.com/api?appId=4EVU3SJ9MVHN0RL1SJLN&v=1.0&api=dsm.uad.info.crm.CaseDomainApiService.getCaseResource`;
+    const url = 'https://man-sff.jd.com/api?appId=4EVU3SJ9MVHN0RL1SJLN&v=1.0&api=dsm.uad.info.crm.CaseDomainApiService.getCaseResource';
     const payload = {
       apiRequestDTO: {
         authType: '5',

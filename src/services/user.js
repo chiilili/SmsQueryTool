@@ -6,9 +6,12 @@
     async fetchErp() {
       if (cached) return cached;
       try {
-        const res = await fetch(URL_USER_ERP, { method: 'GET', credentials: 'include', headers: { 'Accept': 'application/json, text/plain, */*' } });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const text = await res.text();
+        const text = await A.Http.requestText(URL_USER_ERP, {
+          method: 'GET',
+          credentials: 'include',
+          headers: { 'Accept': 'application/json, text/plain, */*' },
+          errorPrefix: '读取用户ERP失败'
+        });
         const json = JSON.parse(text);
         const erp = A.Text.clean(json && json.erp);
         const exist = Boolean(json && json.exist);

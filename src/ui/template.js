@@ -187,8 +187,17 @@
                 <button id="loadCrmBtn" style="flex:0 0 auto;">获取数据</button>
               </div>
             </td>
+            <th>数据日期</th>
+            <td style="width:230px;">
+              <select id="crmDateRange">
+                <option value="today">今天</option>
+                <option value="yesterday_today">昨天至今天</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
             <th>人员</th>
-            <td style="width:230px;"><select id="crmPersonSelect" disabled><option value="">请先读取数据</option></select></td>
+            <td colspan="3"><select id="crmPersonSelect" disabled><option value="">请先读取数据</option></select></td>
           </tr>
           <tr id="savedCrmRow" class="hidden">
             <th>已存来源</th>
